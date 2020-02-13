@@ -23,7 +23,11 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public int countSumLengthOfWords(String text) {
-        return 0;
+        int sum = 0;
+        for (String words: getWords(text)) {
+            sum += words.length();
+        }
+        return sum;
     }
 
     /**
@@ -34,7 +38,7 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public int countNumberOfWords(String text) {
-        return 0;
+        return getWords(text).size();
     }
 
     /**
@@ -44,7 +48,11 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public int countNumberOfUniqueWords(String text) {
-        return 0;
+        HashSet<String> hashSet = new HashSet<>();
+        for(String word: getWords(text)){
+            hashSet.add(word);
+        }
+        return hashSet.size();
     }
 
     /**
@@ -57,8 +65,13 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public List<String> getWords(String text) {
-        return emptyList();
+       List<String> list = new ArrayList<>();
+       text = text.replaceAll("\n"," ");
+       list.addAll(Arrays.asList(text.replaceAll("\\p{Punct}","").replaceAll("\\s+"," ").split(" ")));
+       return list;
+
     }
+
 
     /**
      * Необходимо реализовать функционал получения списка уникальных слов из текста.
@@ -70,7 +83,11 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public Set<String> getUniqueWords(String text) {
-        return emptySet();
+        HashSet<String> hashSet = new HashSet<>();
+        for(String word: getWords(text)){
+            hashSet.add(word);
+        }
+        return hashSet;
     }
 
     /**
@@ -82,7 +99,20 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public Map<String, Integer> countNumberOfWordsRepetitions(String text) {
-        return emptyMap();
+        HashMap<String,Integer> hashMap = new HashMap<>();
+        List<String> list = new ArrayList();
+        list = getWords(text);
+        int count = 0;
+        for (int i = 0; i < list.size(); i++){
+            for (int j = 0; j < list.size(); j++){
+                if (list.get(i).equals(list.get(j))){
+                    count++;
+                }
+            }
+            hashMap.put(getWords(text).get(i),count);
+            count = 0;
+        }
+        return hashMap;
     }
 
     /**
@@ -95,6 +125,36 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public List<String> sortWordsByLength(String text, Direction direction) {
-        return emptyList();
+        List<String> list = getWords(text);
+        if (direction == Direction.ASC){
+            list.sort((o1, o2) -> {
+                if (o1.length() > o2.length()) {
+                    return +1;
+                }
+                else if (o1.length()==o2.length()){
+                    return 0;
+                }
+                else{
+                    return -1;
+                }
+            });
+            System.out.println(list);
+        }
+        if (direction == Direction.DESC) {
+            list.sort((o1, o2) -> {
+                if (o1.length() > o2.length()) {
+                    return -1;
+                }
+                else if (o1.length()==o2.length()){
+                    return 0;
+                }
+                else{
+                    return +1;
+                }
+            });
+        }
+        return list;
     }
+
+
 }
